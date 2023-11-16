@@ -13,44 +13,58 @@ void Selector::update(InputManager& input)
 		setVisible();
 		startPos = input.getMousePosition();
 		Debug::Log("startPos:%d %d", startPos.x, startPos.y);
-		for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
-		{
-			(*it)->setStatus(POLYGONSTATE::IDLE);
-				(*it)->setVisible();
-		}
+		//for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
+		//{
+		//	(*it)->setStatus(POLYGONSTATE::IDLE);
+		//		(*it)->setVisible();
+		//}
+		for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [&](auto* it)
+			{
+				it->setStatus(POLYGONSTATE::IDLE);
+				it->setVisible();
+			}
+		);
 	}
 	if (input.getMouseButtonStay(0))//�巡�� ���� ���� ���� �ٲܷ��� ������
 	{
 		endPos = input.getMousePosition();
-		for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
+		for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [&](RegularPolygon* it)
+			{
+				if (inside(it->getPosition(), startPos, endPos))
+				{
+					it->setStatus(POLYGONSTATE::SELECTED);
+				}
+			}
+		);
+		/*for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
 		{
 			if (inside((*it)->getPosition(), startPos, endPos))
 			{
 				(*it)->setStatus(POLYGONSTATE::SELECTED);
 			}
 		}
-		//Debug::Log("endPos:%d %d", endPos.x, endPos.y);
+		*///Debug::Log("endPos:%d %d", endPos.x, endPos.y);
 	}
 	if (input.getMouseButtonUp(0))//��ư�� ���� ���
 	{
 		setVisible(false);
 		endPos = input.getMousePosition();
 		Debug::Log("endPos:%d %d", endPos.x, endPos.y);
-		for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
+		/*for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
 		{
 			if (inside((*it)->getPosition(), startPos, endPos))
 			{
 				(*it)->setStatus(POLYGONSTATE::SELECTED);
 			}
-		}
-		//for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [this](auto& it)
-		//	{
-		//		if (inside(it.getposition(), this.startpos, this.endpos))
-		//		{
-		//			it.setStatus(POLYGONSTATE::SELECTED);
-		//		}
-		//	}
-		//);
+		}*/
+		for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [&](RegularPolygon* it)
+			{
+				if (inside(it->getPosition(), startPos, endPos))
+				{
+					it->setStatus(POLYGONSTATE::SELECTED);
+				}
+			}
+		);
 		/*End.x = Borland::WhereX();
 		End.y = Borland::WhereY();*/
 	}
