@@ -1,8 +1,0 @@
-﻿  GameObject.cpp
-  Selector.cpp
-C:\Users\GUNHYEONG\Desktop\midterm_solution\midterm\OOP1\Selector.cpp(51,18): warning C4309: '인수': 상수 값이 잘립니다.
-C:\Users\GUNHYEONG\Desktop\midterm_solution\midterm\OOP1\Selector.cpp(52,18): warning C4309: '인수': 상수 값이 잘립니다.
-C:\Users\GUNHYEONG\Desktop\midterm_solution\midterm\OOP1\Selector.cpp(53,18): warning C4309: '인수': 상수 값이 잘립니다.
-C:\Users\GUNHYEONG\Desktop\midterm_solution\midterm\OOP1\Selector.cpp(54,18): warning C4309: '인수': 상수 값이 잘립니다.
-  코드를 생성하고 있습니다...
-  OOP1.vcxproj -> C:\Users\GUNHYEONG\Desktop\midterm_solution\midterm\x64\Debug\OOP1.exe
