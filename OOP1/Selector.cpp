@@ -1,59 +1,89 @@
-#include "Selector.h"
+ï»¿#include "Selector.h"
 #include "InputManager.h"
 #include "Utils.h"
 #include "Canvas.h"
+#include "RegularPolygon.h"
+#include <algorithm>
 void Selector::update(InputManager& input)
 {
-	/*Position v1;
-	Position v2;
-	*/
-	if (input.getMouseButtonDown(0))//Ã³À½´­·¶À» °æ¿ì
+	vector<RegularPolygon*>::iterator it;
+	
+	if (input.getMouseButtonDown(0))//Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	{
 		setVisible();
 		startPos = input.getMousePosition();
 		Debug::Log("startPos:%d %d", startPos.x, startPos.y);
+		for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
+		{
+			(*it)->setStatus(POLYGONSTATE::IDLE);
+				(*it)->setVisible();
+		}
 	}
-	if (input.getMouseButtonStay(0))//µå·¡±× ÁßÀÏ ¶§µµ °ªÀ» ¹Ù²Ü·Á°í ¼³Á¤ÇÔ
+	if (input.getMouseButtonStay(0))//ï¿½å·¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²Ü·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		endPos = input.getMousePosition();
+		for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
+		{
+			if (inside((*it)->getPosition(), startPos, endPos))
+			{
+				(*it)->setStatus(POLYGONSTATE::SELECTED);
+			}
+		}
 		//Debug::Log("endPos:%d %d", endPos.x, endPos.y);
 	}
-	if (input.getMouseButtonUp(0))//¹öÆ°À» ¶¼´Â °æ¿ì
+	if (input.getMouseButtonUp(0))//ï¿½ï¿½Æ°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 	{
 		setVisible(false);
 		endPos = input.getMousePosition();
 		Debug::Log("endPos:%d %d", endPos.x, endPos.y);
+		for (it = polyMgr.polygons.begin(); it != polyMgr.polygons.end(); it++)
+		{
+			if (inside((*it)->getPosition(), startPos, endPos))
+			{
+				(*it)->setStatus(POLYGONSTATE::SELECTED);
+			}
+		}
+		/*for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [](auto it)
+			{
+				if (inside((*it)->getPosition(), startPos, endPos))
+				{
+					(*it)->setSelect();
+				}
+			}
+		);*/
 		/*End.x = Borland::WhereX();
 		End.y = Borland::WhereY();*/
 	}
-	for_each(polyMgr)
 
-
-
-	//if (startPos.x > endPos.x)
-	//{
-	//	int temp_x = startPos.x;
-	//	startPos.x = endPos.x;
-	//	endPos.x = temp_x;
-	//}
-	//if (startPos.y > endPos.y)
-	//{
-	//	int temp_y = startPos.y;
-	//	startPos.y = endPos.y;
-	//	endPos.y = temp_y;
-	//}
-	//Debug::Log("startPos:%d %d", startPos.x, startPos.y);
-	//Debug::Log("endPos:%d %d", endPos.x, endPos.y);
 }
 
 void Selector::draw()
 {
-	if (startPos.x == endPos.x&&startPos.y==endPos.y)
+	canvas.drawRectangle(startPos, endPos, isVisible());
+	/*if (startPos.x == endPos.x&&startPos.y==endPos.y)
 		return;
 	if (!isVisible())
 		return;
-	canvas.drawLine(196, startPos, Position{ endPos.x , startPos.y });//+·Î Ã³¸®µÉÁÙ ¾Ë¾Ò´Âµ¥ +¸¦ ÀÚ¼¼È÷ º¸´Ï VectorÀÇ °ªÀ¸·Î ³Ñ±â°Ô µÇ¾îÀÖ¾î¼­ ±âÁ¸ÀÇ x¿Í ³»°¡ ´õÇÏ·Á´Â x°¡ ´õÇØÁ®¼­ ÀÌ»óÇÑ °á°ú°¡ ³ª¿À±â¿¡ ÀÓ½Ãº¯¼ö·Î ³Ö¾î¼­ Á¤È®È÷ Àü´ÞÇÔ
+	canvas.drawLine(196, startPos, Position{ endPos.x , startPos.y });
 	canvas.drawLine(179, Position{ endPos.x ,startPos.y }, endPos);
 	canvas.drawLine(196, Position{ startPos.x , endPos.y }, endPos );
-	canvas.drawLine(179,  startPos, Position{ startPos.x , endPos.y });
+	canvas.drawLine(179,  startPos, Position{ startPos.x , endPos.y });*/
+}
+
+bool Selector::inside(const Position &pos,const Position&start,const Position&end)
+{
+	auto minX = start.x < end.x ? start.x : end.x;
+	auto maxX = start.x >= end.x ? start.x : end.x;
+	auto minY = start.y < end.y ? start.y : end.y;
+	auto maxY = start.y >= end.y ? start.y : end.y;
+
+	Vector2 topLeft{ minX, minY };
+	Vector2 topRight{ maxX, minY };
+	Vector2 bottomLeft{ minX, maxY };
+	Vector2 bottomRight{ maxX, maxY };
+	if (pos.x<minX || pos.x>maxX)
+		return false;
+	if (pos.y<minY || pos.y>maxY)
+		return false;
+	return true;
 }

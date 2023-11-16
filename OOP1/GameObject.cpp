@@ -23,14 +23,25 @@ void GameObject::draw() { if (alive == true) canvas.draw(shape, position, dimens
 void GameObject::Initialize()
 {
 	objs.clear();
-	
-	auto dim = canvas.getDimension();
+	vector<RegularPolygon*> polygonvec;
+	auto dim = canvas.getDimension();/*
 	auto polygon = new RegularPolygon(2, { dim.x / 2, dim.y / 2 }, 10.0f);
+	auto polygon1 = new RegularPolygon(2, { dim.x / 2, dim.y / 2 }, 10.0f);
+	auto polygon2 = new RegularPolygon(2, { dim.x / 2, dim.y / 2 }, 10.0f);
+	auto polygon3 = new RegularPolygon(2, { dim.x / 2, dim.y / 2 }, 10.0f);
+	auto polygon4 = new RegularPolygon(2, { dim.x / 2, dim.y / 2 }, 10.0f);*/
+	for (int i = 0; i < 5; i++)
+	{
+		polygonvec.push_back(new RegularPolygon(2+i, { rand() % (dim.x / 2),rand() % (dim.y / 2)}, 10.0-i));
+	}
 	auto polymgr = new RegularPolygonMgr();
+	for_each(polygonvec.begin(), polygonvec.end(), [&](auto it) {polymgr->addPolygon(it);});
+	
 	auto selector = new Selector(Position{0,0},Position{0,0},*polymgr);
 	GameObject::Add(selector);
 	GameObject::Add(polymgr);
-	GameObject::Add(polygon);
+	for_each(polygonvec.begin(), polygonvec.end(), [](auto it) {GameObject::Add(it); });
+	
 }
 
 void GameObject::Add(GameObject* obj)

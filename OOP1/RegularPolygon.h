@@ -8,15 +8,21 @@
 using namespace std;
 
 #define PI 3.14159265f
+enum class POLYGONSTATE
+{
+    IDLE,
+    SELECTED
+};
 
 class RegularPolygon :
     public GameObject
 {
     vector<Vector2> points;
     float   radius;
-
+    
     float   rotationSpeed;
-
+    bool select;
+    POLYGONSTATE state;
     void configure(unsigned int n) {
         if (n == 0 || n == 1) return;
         points.clear();
@@ -32,8 +38,8 @@ class RegularPolygon :
 
 public:
     // set the center position to its game object position.
-    RegularPolygon(int n, const Vector2& center, float radius) : GameObject("polygon", center, { (int)radius, (int)radius }, true),
-        radius(radius), rotationSpeed(PI / 180.0f) // rotation speed by one degree
+    RegularPolygon(int n, const Vector2& center, float radius) : GameObject("polygon", center, { (int)radius, (int)radius }, true),select(false),
+        radius(radius), rotationSpeed(PI / 180.0f),state(POLYGONSTATE::IDLE) // rotation speed by one degree
     {
         configure(n);
     }
@@ -49,6 +55,11 @@ public:
         if (points.size() <= 2) return *this;
         configure((int)points.size() - 1);
         return *this;
+    }
+
+    void setStatus(POLYGONSTATE _state)
+    {
+        state = _state;
     }
 };
 

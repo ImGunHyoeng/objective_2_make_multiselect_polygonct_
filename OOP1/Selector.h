@@ -3,6 +3,7 @@
 #include "RegularPolygonMgr.h"
 class Selector :public GameObject
 {
+public:
 	Position startPos;
 	Position endPos;
 	RegularPolygonMgr polyMgr;
@@ -11,5 +12,6 @@ public:
 	{}
 	void update(InputManager& input) override;
 	void draw() override;
+	bool inside(const Position& pos, const Position& start, const Position& end);
 };
 

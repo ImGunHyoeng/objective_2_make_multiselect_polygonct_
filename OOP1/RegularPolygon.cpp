@@ -13,37 +13,49 @@ void RegularPolygon::rotate()
 
 void RegularPolygon::update(InputManager& input)
 {
-	
-	if (input.getKeyDown(VK_RIGHT)) ++(*this);
-	
-	if (input.getKeyDown(VK_LEFT)) (*this)--;
+	switch (state)
+	{
+	case POLYGONSTATE::IDLE:
+		return;
+	case POLYGONSTATE::SELECTED:
+	{
+		setVisible(!isVisible());
+		if (input.getKeyDown(VK_RIGHT)) ++(*this);
 
-	if (input.getKeyDown(VK_SPACE)) {
-		rotationSpeed = (PI / 180.0f); // reset rotation speed
-		rotate();
+		if (input.getKeyDown(VK_LEFT)) (*this)--;
+
+		if (input.getKeyDown(VK_SPACE)) {
+			rotationSpeed = (PI / 180.0f); // reset rotation speed
+			rotate();
+		}
+
+		if (input.getKey(VK_SPACE)) {
+			rotationSpeed += (PI / 180.0f); // increment rotation speed by one degree.
+			rotate();
+		}
+		if (input.getKey(VK_UP)) {
+			if (radius < 30.0f)
+				radius++;
+		}
+		if (input.getKey(VK_DOWN)) {
+			if (radius > 1.0f)
+				radius--;
+		}
+		if (input.getKey('A')) setPosition(getPosition() + Vector2{ -1, 0 });
+		if (input.getKey('D')) setPosition(getPosition() + Vector2{ 1, 0 });
+		if (input.getKey('W')) setPosition(getPosition() + Vector2{ 0, -1 });
+		if (input.getKey('S')) setPosition(getPosition() + Vector2{ 0, 1 });
+	}
+	return;
 	}
 	
-	if (input.getKey(VK_SPACE)) {
-		rotationSpeed += (PI / 180.0f); // increment rotation speed by one degree.
-		rotate();
-	}
-	if (input.getKey(VK_UP)) {
-		if (radius < 30.0f) 
-			radius++;
-	}
-	if (input.getKey(VK_DOWN)) {
-		if (radius > 1.0f) 
-			radius--;
-	}
-	if (input.getKey('A')) setPosition( getPosition() + Vector2{ -1, 0 } );
-	if (input.getKey('D')) setPosition( getPosition() + Vector2{ 1, 0 } );
-	if (input.getKey('W')) setPosition( getPosition() +  Vector2{0, -1} );
-	if (input.getKey('S')) setPosition( getPosition() + Vector2{0, 1 } );
 }
 
 
 void RegularPolygon::draw()
 {
+	if (!isVisible())
+		return;
 	for (int i = 0; i < points.size(); i++) {
 		canvas.drawLine('#', 
 			points.at( i      % (int)points.size()) * radius + getPosition(),
