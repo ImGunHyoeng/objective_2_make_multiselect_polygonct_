@@ -18,7 +18,7 @@ public:
 	}
 	~RegularPolygonMgr()
 	{
-		for_each(polygons.begin(), polygons.end(), [&](auto it) {delete* it; });
+		for_each(polygons.begin(), polygons.end(), [&](auto it) {delete it; });
 	}
 };
 

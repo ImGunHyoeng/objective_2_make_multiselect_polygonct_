@@ -43,14 +43,14 @@ void Selector::update(InputManager& input)
 				(*it)->setStatus(POLYGONSTATE::SELECTED);
 			}
 		}
-		/*for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [](auto it)
-			{
-				if (inside((*it)->getPosition(), startPos, endPos))
-				{
-					(*it)->setSelect();
-				}
-			}
-		);*/
+		//for_each(polyMgr.polygons.begin(), polyMgr.polygons.end(), [this](auto& it)
+		//	{
+		//		if (inside(it.getposition(), this.startpos, this.endpos))
+		//		{
+		//			it.setStatus(POLYGONSTATE::SELECTED);
+		//		}
+		//	}
+		//);
 		/*End.x = Borland::WhereX();
 		End.y = Borland::WhereY();*/
 	}
