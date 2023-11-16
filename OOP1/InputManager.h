@@ -277,6 +277,14 @@ public:
 		//if (result) Debug::Log("mouse %d state staying [%x] on [%d, %d]", button, mouse[button], mousePosition.X, mousePosition.Y);
 		return result;
 	}
+
+	auto getMouseButtonStay(int button) const
+	{
+		bool result = mouse[button] == MouseState::Stay;
+		//if (result) Debug::Log("mouse %d state staying [%x] on [%d, %d]", button, mouse[button], mousePosition.X, mousePosition.Y);
+		return result;
+	}
+
 	auto getMouseButtonDown(int button) const
 	{
 		bool result = mouse[button] == MouseState::Pressed;

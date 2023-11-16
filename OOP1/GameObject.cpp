@@ -9,6 +9,8 @@
 #include "InputManager.h"
 #include <algorithm>
 #include "RegularPolygon.h"
+#include "Selector.h"
+#include "RegularPolygonMgr.h"
 
 using namespace std;
 
@@ -24,6 +26,10 @@ void GameObject::Initialize()
 	
 	auto dim = canvas.getDimension();
 	auto polygon = new RegularPolygon(2, { dim.x / 2, dim.y / 2 }, 10.0f);
+	auto polymgr = new RegularPolygonMgr();
+	auto selector = new Selector(Position{0,0},Position{0,0},*polymgr);
+	GameObject::Add(selector);
+	GameObject::Add(polymgr);
 	GameObject::Add(polygon);
 }
 
